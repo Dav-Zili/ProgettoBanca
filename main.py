@@ -7,27 +7,30 @@ def letturaIntestatarioConto():
         lettore = csv.reader(fileCSV,delimiter=";")
         contatoreLinea = 0
         for riga in lettore:
-            if contatoreLinea == 0:
-                print("I nomi delle colonne sono: ", ", ".join(riga))  
-            else:
-                print("|Nome: " , riga[0], " Cognome: " , riga[1], " IDConto:", riga[2],"|")
+            print("|Nome: " , riga[0], " Cognome: " , riga[1], " IDConto:", riga[2],"|")
             contatoreLinea += 1
-        print("Processate: ", contatoreLinea - 1, " righe")
 def letturaSaldoConto(idConto):
     idConto = str(idConto)
     with open("./Saldo_conti.csv", encoding="utf-8-sig") as fileCSV:
         lettore = csv.reader(fileCSV,delimiter=";")
-        for riga in lettore:
-            if riga[0] == idConto:
-                print("|Il saldo è:", riga[1] , "|")  
-
+        lista = list(lettore)
+        if idConto in chain.from_iterable(lista):
+            for riga in lettore:
+                if riga[0] == idConto:
+                    print("|Il saldo è:", riga[1] , "|")  
+        else:       
+            print("######################################### \n Errore, id del conto inesistente \n######################################### ")
 def letturaMovimentiConto(idConto):
     idConto = str(idConto)
     with open("./SaldoMovimenti_conti.csv", encoding="utf-8-sig") as fileCSV:
         lettore = csv.reader(fileCSV,delimiter=";")
-        for riga in lettore:
-            if riga[0] == idConto:
-                print("|In data ", riga[2] , " è avvenuto una richiesta di ", riga[1] , "|")
+        lista = list(lettore)
+        if idConto in chain.from_iterable(lista):
+            for riga in lettore:
+                if riga[0] == idConto:
+                    print("|In data ", riga[2] , " è avvenuto una richiesta di ", riga[1] , "|")
+        else:       
+            print("######################################### \n Errore, id del conto inesistente \n######################################### ")
 
 def inserisciConto():
     with open('Anagrafica_conti.csv', 'a', encoding="utf-8-sig", newline='') as fileCSV:
@@ -42,7 +45,8 @@ def inserisciConto():
             saldo = input("Dimmi il saldo iniziale da depositare\n")
             saldo += "$"
             dataOdierna = date.today().strftime("%d/%m/%Y")
-            l = [idConto, saldo, dataOdierna]
+            l = [idConto, saldo, dataOdierna]    
+            print("######################################### \n Hai creato un account con i seguenti dati: \n" , "Nome:", nome, "\n" , "Cognome:", cognome , "\n", "Saldo iniziale:", saldo,  "\n", "Id:", idConto , "\n######################################### ")
             writer.writerow(l)
             with open('SaldoMovimenti_conti.csv', 'a', encoding="utf-8-sig", newline='') as fileCSV3:
                 writer = csv.writer(fileCSV3, delimiter=';')
@@ -65,8 +69,8 @@ def versaSoldi():
                         writer = csv.writer(fileCSV2, delimiter=';')
                         writer.writerows(lista)
                 numeroRiga += 1
-        else:
-            print("Errore, id del conto inesistente")
+        else:       
+            print("######################################### \n Errore, id del conto inesistente \n######################################### ")
 def prelevaSoldi():
     with open("./Saldo_conti.csv", encoding="utf-8-sig") as fileCSV:
         lettore = csv.reader(fileCSV,delimiter=";")
@@ -84,22 +88,27 @@ def prelevaSoldi():
                         writer = csv.writer(fileCSV2, delimiter=';')
                         writer.writerows(lista)
                 numeroRiga += 1
-        else:
-            print("Errore, id del conto inesistente")       
-x = int(input("Cosa si desidera fare?\n 1. Leggere informazioni su correntista \n 2. Stampare saldo di un conto a partire dall'id di esso \n 3. Stampare lista movimenti a partire dall'id conto \n 4. Inserire un nuovo conto \n 5. Versa soldi su un conto\n 6. Preleva soldi \n"))     
-if(x == 1):
-    letturaIntestatarioConto()
-elif(x == 2):
-        idConto = input("Inserisci id conto\n")
-        letturaSaldoConto(idConto)
-elif(x == 3):
-        idConto = input("Inserisci id conto\n")
-        letturaMovimentiConto(idConto)
-elif(x == 4):
-    inserisciConto()
-elif(x == 5):
-    versaSoldi()
-elif(x == 6):
-    prelevaSoldi()
-else:
-        print("Hai sbagliato a scrivere!")
+        else:       
+            print("######################################### \n Errore, id del conto inesistente \n######################################### ")
+esciProgramma = False
+while(not esciProgramma):
+    x = input("Cosa si desidera fare?\n 0. Esci dal programma \n 1. Leggere informazioni su correntista \n 2. Stampare saldo di un conto a partire dall'id di esso \n 3. Stampare lista movimenti a partire dall'id conto \n 4. Inserire un nuovo conto \n 5. Versa soldi su un conto\n 6. Preleva soldi \n")   
+    if(x == "1"):
+        letturaIntestatarioConto()
+    elif(x == "2"):
+            idConto = input("Inserisci id conto\n")
+            letturaSaldoConto(idConto)
+    elif(x == "3"):
+            idConto = input("Inserisci id conto\n")
+            letturaMovimentiConto(idConto)
+    elif(x == "4"):
+        inserisciConto()
+    elif(x == "5"):
+        versaSoldi()
+    elif(x == "6"):
+        prelevaSoldi()
+    elif(x == "0"):
+        print("Sei uscito dalla banca!")
+        esciProgramma = True
+    else:
+            print("Hai sbagliato a scrivere!")
