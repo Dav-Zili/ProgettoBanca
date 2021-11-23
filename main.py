@@ -7,7 +7,8 @@ def letturaIntestatarioConto():
         lettore = csv.reader(fileCSV,delimiter=";")
         contatoreLinea = 0
         for riga in lettore:
-            print("|Nome: " , riga[0], " Cognome: " , riga[1], " IDConto:", riga[2],"|")
+            if(contatoreLinea != 0):
+                print("|Nome: " , riga[0], " Cognome: " , riga[1], " IDConto:", riga[2],"|")
             contatoreLinea += 1
 def letturaSaldoConto(idConto):
     idConto = str(idConto)
@@ -15,7 +16,7 @@ def letturaSaldoConto(idConto):
         lettore = csv.reader(fileCSV,delimiter=";")
         lista = list(lettore)
         if idConto in chain.from_iterable(lista):
-            for riga in lettore:
+            for riga in lista:
                 if riga[0] == idConto:
                     print("|Il saldo è:", riga[1] , "|")  
         else:       
@@ -26,7 +27,7 @@ def letturaMovimentiConto(idConto):
         lettore = csv.reader(fileCSV,delimiter=";")
         lista = list(lettore)
         if idConto in chain.from_iterable(lista):
-            for riga in lettore:
+            for riga in lista:
                 if riga[0] == idConto:
                     print("|In data ", riga[2] , " è avvenuto una richiesta di ", riga[1] , "|")
         else:       
