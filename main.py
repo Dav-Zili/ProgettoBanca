@@ -2,10 +2,12 @@ import csv
 from random import randint
 from datetime import date
 from itertools import chain
+import os
 def letturaIntestatarioConto():
     with open("./Anagrafica_conti.csv", encoding="utf-8-sig") as fileCSV:
         lettore = csv.reader(fileCSV,delimiter=";")
         contatoreLinea = 0
+        print("Lista correntisti:")
         for riga in lettore:
             if(contatoreLinea != 0):
                 print("|Nome: " , riga[0], " Cognome: " , riga[1], " IDConto:", riga[2],"|")
@@ -64,7 +66,7 @@ def versaSoldi():
                 if riga[0] == idConto:
                     sommaDepositare = int(input("Quanti soldi vanno depositati? \n"))
                     nuovoSaldo = int(riga[1].replace("$", "")) + sommaDepositare
-                    print("Il saldo attuale ora è di:", nuovoSaldo , "$\n")
+                    print("Il saldo attuale ora è di:", riga[1], " ->" , nuovoSaldo , "$\n")
                     lista[numeroRiga][1] = str(nuovoSaldo) + "$"
                     with open('Saldo_conti.csv', 'w', encoding="utf-8-sig", newline='') as fileCSV2:
                         writer = csv.writer(fileCSV2, delimiter=';')
@@ -83,17 +85,21 @@ def prelevaSoldi():
                 if riga[0] == idConto:
                     sommaPrelevare = int(input("Quanti soldi vanno prelevati? \n"))
                     nuovoSaldo = int(riga[1].replace("$", "")) - sommaPrelevare if (sommaPrelevare <= int(riga[1].replace("$", ""))) else riga[1]
-                    print("Il saldo attuale ora è di:", nuovoSaldo , "$\n")
-                    lista[numeroRiga][1] = str(nuovoSaldo) + "$"
-                    with open('Saldo_conti.csv', 'w', encoding="utf-8-sig", newline='') as fileCSV2:
-                        writer = csv.writer(fileCSV2, delimiter=';')
-                        writer.writerows(lista)
+                    if(sommaPrelevare > int(riga[1].replace("$", ""))):
+                        print("Non ci sono abbastanza soldi sul conto")
+                    else:
+                        print("Il saldo attuale ora è di:", riga[1] , " ->" , nuovoSaldo , "$\n")
+                        lista[numeroRiga][1] = str(nuovoSaldo) + "$"
+                        with open('Saldo_conti.csv', 'w', encoding="utf-8-sig", newline='') as fileCSV2:
+                            writer = csv.writer(fileCSV2, delimiter=';')
+                            writer.writerows(lista)
                 numeroRiga += 1
         else:       
             print("######################################### \n Errore, id del conto inesistente \n######################################### ")
 esciProgramma = False
 while(not esciProgramma):
-    x = input("Cosa si desidera fare?\n 0. Esci dal programma \n 1. Leggere informazioni su correntista \n 2. Stampare saldo di un conto a partire dall'id di esso \n 3. Stampare lista movimenti a partire dall'id conto \n 4. Inserire un nuovo conto \n 5. Versa soldi su un conto\n 6. Preleva soldi \n")   
+    x = input("Cosa si desidera fare?\n 0. Esci dal programma \n 1. Leggere informazioni su correntista \n 2. Stampare saldo di un conto a partire dall'id di esso \n 3. Stampare lista movimenti a partire dall'id conto \n 4. Inserire un nuovo conto \n 5. Versa soldi su un conto\n 6. Preleva soldi da un conto\n")
+    os.system('cls')  
     if(x == "1"):
         letturaIntestatarioConto()
     elif(x == "2"):
