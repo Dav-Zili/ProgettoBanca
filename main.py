@@ -51,10 +51,6 @@ def inserisciConto():
             l = [idConto, saldo, dataOdierna]    
             print("######################################### \n Hai creato un account con i seguenti dati: \n" , "Nome:", nome, "\n" , "Cognome:", cognome , "\n", "Saldo iniziale:", saldo,  "\n", "Id:", idConto , "\n######################################### ")
             writer.writerow(l)
-            with open('SaldoMovimenti_conti.csv', 'a', encoding="utf-8-sig", newline='') as fileCSV3:
-                writer = csv.writer(fileCSV3, delimiter=';')
-                l = [idConto, saldo, dataOdierna]
-                writer.writerow(l)
 def versaSoldi():
     with open("./Saldo_conti.csv", encoding="utf-8-sig") as fileCSV:
         lettore = csv.reader(fileCSV,delimiter=";")
@@ -71,6 +67,12 @@ def versaSoldi():
                     with open('Saldo_conti.csv', 'w', encoding="utf-8-sig", newline='') as fileCSV2:
                         writer = csv.writer(fileCSV2, delimiter=';')
                         writer.writerows(lista)
+                    with open('SaldoMovimenti_conti.csv', 'a', encoding="utf-8-sig", newline='') as fileCSV3:
+                            writer = csv.writer(fileCSV3, delimiter=';')
+                            dataOdierna = date.today().strftime("%d/%m/%Y")
+                            sommaDepositare = "+" + str(sommaDepositare) +"$"
+                            l = [idConto, sommaDepositare, dataOdierna]
+                            writer.writerow(l)
                 numeroRiga += 1
         else:       
             print("######################################### \n Errore, id del conto inesistente \n######################################### ")
@@ -93,6 +95,12 @@ def prelevaSoldi():
                         with open('Saldo_conti.csv', 'w', encoding="utf-8-sig", newline='') as fileCSV2:
                             writer = csv.writer(fileCSV2, delimiter=';')
                             writer.writerows(lista)
+                        with open('SaldoMovimenti_conti.csv', 'a', encoding="utf-8-sig", newline='') as fileCSV3:
+                            writer = csv.writer(fileCSV3, delimiter=';')
+                            dataOdierna = date.today().strftime("%d/%m/%Y")
+                            sommaPrelevare = "-" + str(sommaPrelevare) +"$"
+                            l = [idConto, sommaPrelevare, dataOdierna]
+                            writer.writerow(l)
                 numeroRiga += 1
         else:       
             print("######################################### \n Errore, id del conto inesistente \n######################################### ")
